@@ -78,12 +78,15 @@ module.exports = {
                   username,
                   createdAt: new Date().toISOString()
                 });
-              }
-      
+              }    
               await post.save();
               return post;
             } else throw new UserInputError('Post not found');
-        }
-    }
-    
+        },
+    },
+    // Subscription: {
+    //     newPost: {
+    //       subscribe: (_, __, { pubsub }) => pubsub.asyncIterator('NEW_POST')
+    //     }    
+    // },
 };

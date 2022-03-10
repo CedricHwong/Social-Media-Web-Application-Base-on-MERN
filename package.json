@@ -4,6 +4,7 @@
   "description": "A Social Media Web Application Create by using React Framework, MongoDB, GraphQL",
   "main": "index.js",
   "scripts": {
+    "serve": "node index",
     "start": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +14,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/CedricHwong/Social-Media-Web-Application-Base-on-MERN/issues"
   },

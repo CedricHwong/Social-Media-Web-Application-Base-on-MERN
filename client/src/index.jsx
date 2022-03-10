@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider,  } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider } from '@apollo/client';
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = new HttpLink({

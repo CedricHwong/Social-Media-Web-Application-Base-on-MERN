@@ -95,6 +95,9 @@ function SinglePost() {
           {comments.map((comment) => (
             <Card fluid key={comment.id}>
               <Card.Content>
+                {user?.username === comment.username && (
+                  <DeleteButton postId={id} commentId={comment.id} />
+                )}
                 <CardBody info={comment} />
               </Card.Content>
             </Card>

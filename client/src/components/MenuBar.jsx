@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react';
+
+import React, { useState } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-import { AuthContext } from '../context/auth';
+import { useAuth } from '../context/auth';
 
 function MenuBar() {
 
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useAuth();
   const path = window.location.pathname.substring(1);
   const [activeItem, setActiveItem] = useState(path);
 

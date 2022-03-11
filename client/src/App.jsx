@@ -1,16 +1,16 @@
 import './App.css';
 // import 'semantic-ui-css/semantic.css';
 
-import { useContext } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
 import { Home, Login, Register, SinglePost } from './pages';
 import MenuBar from './components/MenuBar';
-import { AuthContext } from './context/auth';
+import { useAuth } from './context/auth';
 
 const NotFound = () => <h1>Page Not Found</h1>;
-const IfNotLogin = () => useContext(AuthContext).user
+const IfNotLogin = () => useAuth().user
   ? <Navigate replace to="/" />
   : <Outlet />;
 

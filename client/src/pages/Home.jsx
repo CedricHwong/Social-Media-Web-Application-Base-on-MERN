@@ -1,13 +1,13 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import { Grid } from 'semantic-ui-react';
 import { PostCard, PostForm } from '../components';
-import { AuthContext } from '../context/auth';
+import { useAuth } from '../context/auth';
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
 
 function Home() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const { loading, error, data } = useQuery(FETCH_POSTS_QUERY);
   return (
     <Grid columns={3}>

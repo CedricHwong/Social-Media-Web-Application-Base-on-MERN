@@ -1,10 +1,10 @@
 
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import moment from 'moment';
 import { Grid, Image, Card, Button, Icon, Label, Form } from 'semantic-ui-react';
-import { AuthContext } from '../context/auth';
+import { useAuth } from '../context/auth';
 import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION } from '../utils/graphql';
 import { LikeButton, DeleteButton, MyPopup } from '../components';
 
@@ -12,7 +12,7 @@ function SinglePost() {
 
   const navigate = useNavigate();
   const { postId } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const { loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: { postId },
   });

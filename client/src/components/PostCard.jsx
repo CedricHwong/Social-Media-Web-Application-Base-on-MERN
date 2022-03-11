@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Image, Button, Icon, Label } from 'semantic-ui-react';
 import moment from 'moment';
-import { AuthContext } from '../context/auth';
+import { useAuth } from '../context/auth';
 import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import MyPopup from './MyPopup';
@@ -13,7 +14,7 @@ function PostCard({
   }
 }) {
 
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const commentOnPost = console.log;
 
   return (

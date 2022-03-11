@@ -18,7 +18,7 @@ function PostCard({
         <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg" />
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
-          {moment(createdAt).fromNow()} ago
+          {moment(createdAt).fromNow()}
         </Card.Meta>
         <Card.Description>{body}</Card.Description>
       </Card.Content>

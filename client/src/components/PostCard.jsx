@@ -4,6 +4,7 @@ import { Card, Image, Button, Icon, Label } from 'semantic-ui-react';
 import moment from 'moment';
 import { AuthContext } from '../context/auth';
 import LikeButton from './LikeButton';
+import DeleteButton from './DeleteButton';
 
 function PostCard({
   post: {
@@ -33,9 +34,7 @@ function PostCard({
           <Label basic color="teal" pointing="left">{commentCount}</Label>
         </Button>
         {user?.username === username && (
-          <Button as="div" color="red" floated="right" onClick={console.log}>
-            <Icon name="trash" style={{ margin: 0 }} />
-          </Button>
+          <DeleteButton postId={id} />
         )}
       </Card.Content>
     </Card>

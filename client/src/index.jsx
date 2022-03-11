@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider } from '@apollo/client';
 import { setContext } from "@apollo/client/link/context";
+import { AuthProvider } from './context/auth';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000'
@@ -26,7 +27,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </ApolloProvider>,
   document.getElementById('root')
 );

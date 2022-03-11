@@ -1,34 +1,11 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Form, Button } from 'semantic-ui-react';
 
 import { useForm } from '../utils/useFormHooks';
-
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
-      id
-      email
-      username
-      createdAt
-      token
-    }
-  }
-`;
+import { REGISTER_USER_MUTATION } from '../utils/graphql';
 
 function Register() {
 
@@ -42,11 +19,10 @@ function Register() {
     confirmPassword: '',
   });
 
-  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+  const [addUser, { loading }] = useMutation(REGISTER_USER_MUTATION, {
     update(proxy, result) {
       console.log(result);
-      // navigate('/login', { replace: true });
-      navigate('/');
+      navigate('/login', { replace: true });
     },
     onError(err) {
       console.error(err, err.graphQLErrors);

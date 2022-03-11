@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Grid, Image, Card, Button, Icon, Label, Form } from 'semantic-ui-react';
 import { AuthContext } from '../context/auth';
 import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION } from '../utils/graphql';
-import { LikeButton, DeleteButton } from '../components';
+import { LikeButton, DeleteButton, MyPopup } from '../components';
 
 function SinglePost() {
 
@@ -57,12 +57,14 @@ function SinglePost() {
           <hr />
           <Card.Content extra>
             <LikeButton user={user} post={{ id, likeCount, likes }} />
-            <Button as="div" labelPosition="right" onClick={console.log}>
-              <Button basic color="blue">
-                <Icon name="comments" />
+            <MyPopup content="Comment on post">
+              <Button as="div" labelPosition="right" onClick={console.log}>
+                <Button basic color="blue">
+                  <Icon name="comments" />
+                </Button>
+                <Label basic color="blue" pointing="left">{commentCount}</Label>
               </Button>
-              <Label basic color="blue" pointing="left">{commentCount}</Label>
-            </Button>
+            </MyPopup>
             {user?.username === username && (
               <DeleteButton postId={id} callback={deletePostCallback} />
             )}

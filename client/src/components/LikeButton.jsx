@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useMutation } from '@apollo/client';
 import { Button, Label, Icon } from 'semantic-ui-react';
 import { LIKE_POST_MUTATION } from '../utils/graphql';
+import MyPopup from "./MyPopup";
 
 function LikeButton({ user, post: { id, likeCount, likes } }) {
 
@@ -19,9 +20,11 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
 
   return (
     <Button as="div" labelPosition="right" onClick={likePost}>{user
-      ? <Button color="teal" basic={!liked}>
-          <Icon name="heart" />
-        </Button>
+      ? <MyPopup content={liked? 'Unlike': 'Like'}>
+          <Button color="teal" basic={!liked}>
+            <Icon name="heart" />
+          </Button>
+        </MyPopup>
       : <Button as={Link} to="/login" color="teal" basic>
           <Icon name="heart" />
         </Button>}

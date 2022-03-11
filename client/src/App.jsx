@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
-import { Home, Login, Register } from './pages';
+import { Home, Login, Register, SinglePost } from './pages';
 import MenuBar from './components/MenuBar';
 import { AuthContext } from './context/auth';
 
@@ -26,6 +26,7 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
           </Route>
+          <Route exact path="/posts/:postId" element={<SinglePost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>

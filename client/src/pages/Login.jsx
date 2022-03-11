@@ -33,8 +33,7 @@ function Login() {
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(_, { data: { login: userData } }) {
       ctx.login(userData);
-      // navigate('/', { replace: true });
-      navigate('/');
+      navigate('/', { replace: true });
     },
     onError(err) {
       console.error(err, err.graphQLErrors);

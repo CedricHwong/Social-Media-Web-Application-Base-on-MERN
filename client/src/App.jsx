@@ -1,13 +1,18 @@
 import './App.css';
 // import 'semantic-ui-css/semantic.css';
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
 import { Home, Login, Register } from './pages';
 import MenuBar from './components/MenuBar';
+import { AuthContext } from './context/auth';
 
 const NotFound = () => <h1>Page Not Found</h1>;
+const IfNotLogin = () => useContext(AuthContext).user
+  ? <Navigate replace to="/" />
+  : <Outlet />;
 
 function App() {
   return (
@@ -15,10 +20,12 @@ function App() {
       <Container>
         <MenuBar />
         <Routes>
-          <Route path="/" element={<Navigate replace to="/home" />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route exact path="/" element={<Navigate replace to="/home" />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route element={<IfNotLogin />}>
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>

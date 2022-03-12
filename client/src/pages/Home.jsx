@@ -1,14 +1,29 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Grid, Transition } from 'semantic-ui-react';
 import { PostCard, PostForm } from '../components';
 import { useAuth } from '../context/auth';
-import { FETCH_POSTS_QUERY } from '../utils/graphql';
+import { FETCH_POSTS_QUERY, POST_CREATED_SUBSCRIPTION } from '../utils/graphql';
 
 function Home() {
   const { user } = useAuth();
-  const { loading, error, data } = useQuery(FETCH_POSTS_QUERY);
+  const { loading, error, data, subscribeToMore } = useQuery(FETCH_POSTS_QUERY);
+
+  useEffect(() => {
+    subscribeToMore({
+      document: POST_CREATED_SUBSCRIPTION,
+      updateQuery(prev, { subscriptionData }) {
+        if (!subscriptionData.data?.newPost) return prev;
+        const { newPost } = subscriptionData.data;
+        return {
+          ...prev,
+          getPosts: [newPost, ...prev.getPosts],
+        };
+      },
+    });
+  }, []);
+
   return (
     <Grid columns={3}>
       <Grid.Row className="page-title">

@@ -141,3 +141,25 @@ export const DELETE_COMMENT_MUTATION = gql`
     }
   }
 `;
+
+export const POST_CREATED_SUBSCRIPTION = gql`
+  subscription NewPost {
+    newPost {
+      id
+      body
+      createdAt
+      username
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id
+        username
+        createdAt
+        body
+      }
+    }
+  }
+`;

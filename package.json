@@ -21,6 +21,7 @@
   "homepage": "https://github.com/CedricHwong/Social-Media-Web-Application-Base-on-MERN#readme",
   "dependencies": {
     "@graphql-tools/schema": "^8.3.2",
+    "apollo-server": "^3.6.4",
     "apollo-server-core": "^3.6.4",
     "apollo-server-express": "^3.6.3",
     "bcryptjs": "^2.4.3",

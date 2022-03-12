@@ -65,6 +65,18 @@ export const REGISTER_USER_MUTATION = gql`
   }
 `;
 
+export const LOGIN_USER = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      id
+      email
+      username
+      createdAt
+      token
+    }
+  }
+`;
+
 export const LIKE_POST_MUTATION = gql`
   mutation likePost($postId: ID!) {
     likePost(postId: $postId) {

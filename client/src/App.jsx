@@ -5,7 +5,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
-import { Home, Login, Register, SinglePost } from './pages';
+import { Home, Login, Register, SinglePost, UserDetails } from './pages';
 import MenuBar from './components/MenuBar';
 import { useAuth } from './context/auth';
 
@@ -31,6 +31,7 @@ function App() {
             <Route exact path="/register" element={<Register />} />
           </Route>
           <Route exact path="/posts/:postId" element={<SinglePost />} />
+          <Route exact path="/users/:userId" element={<UserDetails />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -1,23 +1,12 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Form, Button } from 'semantic-ui-react';
 
 import { useForm } from '../utils/useFormHooks';
 import { useAuth } from '../context/auth';
-
-const LOGIN_USER = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      id
-      email
-      username
-      createdAt
-      token
-    }
-  }
-`;
+import { LOGIN_USER } from '../utils/graphql';
 
 function Login() {
 

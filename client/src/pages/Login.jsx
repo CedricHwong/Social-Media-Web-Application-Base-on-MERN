@@ -48,7 +48,7 @@ function Login() {
 
   return (
     <div className="form-container">
-      <Form onSubmit={onSubmit} noValidate>
+      <Form onSubmit={onSubmit} noValidate className={loading? 'loading': ''}>
         <h1>Login</h1>
         <Form.Input
           type="text"

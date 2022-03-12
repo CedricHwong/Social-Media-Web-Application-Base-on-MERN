@@ -1,5 +1,6 @@
 
 const { AuthenticationError, UserInputError } = require('apollo-server');
+const { withFilter } = require('graphql-subscriptions');
 
 const Post = require('../../models/Post');
 const checkAuth = require('../../util/check-auth');
@@ -97,9 +98,13 @@ module.exports = {
   },
   Subscription: {
     updatedPost: {
-      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator([
-        'NEW_POST', 'DEL_POST', 'LIKE_POST', 'COMMENT_POST'
-      ]),
+      subscribe: withFilter(
+        (_, __, { pubsub }) => pubsub.asyncIterator([
+          'NEW_POST', 'DEL_POST', 'LIKE_POST', 'COMMENT_POST'
+        ]),
+        (payload, variables) =>
+          !variables.postId || payload.updatedPost.postId === variables.postId,
+      ),
     },
   },
 };

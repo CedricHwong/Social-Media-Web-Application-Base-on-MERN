@@ -25,8 +25,9 @@ module.exports = {
         });
         await post.save();
         context.pubsub.publish('COMMENT_POST', { updatedPost: {
-          eventType: 'COMMENT',
-          postId, post
+          eventType: 'NEW_COMMENT',
+          postId, post, comment: post.comments[0],
+          commentId: post.comments[0].id,
         } });
         return post;
       }
@@ -43,6 +44,10 @@ module.exports = {
         if (post.comments[commentIndex].username === username) {
           post.comments.splice(commentIndex, 1);
           await post.save();
+          context.pubsub.publish('COMMENT_POST', { updatedPost: {
+            eventType: 'DEL_COMMENT',
+            postId, post, commentId
+          } });
           return post;
         }
         else {

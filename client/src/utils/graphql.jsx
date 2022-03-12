@@ -13,12 +13,6 @@ export const FETCH_POSTS_QUERY = gql`
         username
       }
       commentCount
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
     }
   }
 `;
@@ -143,8 +137,8 @@ export const DELETE_COMMENT_MUTATION = gql`
 `;
 
 export const POST_UPDATED_SUBSCRIPTION = gql`
-  subscription UpdatedPost {
-    updatedPost {
+  subscription UpdatedPost($postId: ID) {
+    updatedPost(postId: $postId) {
       eventType
       postId
       post {

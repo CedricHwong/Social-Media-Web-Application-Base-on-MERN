@@ -1,7 +1,7 @@
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { validateRegisterInput, validateLoginInput } = require('../../util/validators');
+const { validateRegisterInput, validateLoginInput, validateUpdateInput } = require('../../util/validators');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 
@@ -10,7 +10,7 @@ const { UserInputError } = require('apollo-server');
 function generateToken(user) {
   return jwt.sign(
     {
-      id: user.id,
+      id: user.id || user._id,
       email: user.email,
       username: user.username,
     },
@@ -20,6 +20,27 @@ function generateToken(user) {
 }
 
 module.exports = {
+  Query: {
+    async getUser(_, { userId, username, email }) {
+      const isEmpty = (s) => s && !!s.trim();
+      if (![userId, username, email].some(isEmpty)) {
+        throw new Error('Invalid input: At least one parameter is required.');
+      }
+      const $and = [];
+      if (userId) $and.push({ _id: userId });
+      if (username) $and.push({ username });
+      if (email) $and.push({ email });
+      const user = await User.findOne({ $and });
+      if (!user) return null;
+      return {
+        ...user._doc,
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        createdAt: user.createdAt,
+      };
+    },
+  },
   Mutation: {
     async login(_, { username, password }) {
       const { errors, valid } = validateLoginInput(username, password);
@@ -89,14 +110,36 @@ module.exports = {
 
       const res = await newUser.save();
 
-      const token = jwt.sign({
-        id: res.id,
-        email: res.email,
-        username: res.username,
-      },
-        SECRET_KEY,
-        { expiresIn: '1h' },
-      );
+      const token = generateToken(res);
+      return {
+        ...res._doc,
+        id: res._id,
+        token,
+      };
+    },
+    async updateUserInfo(_, {
+      id, oldPwd,
+      username = '', newPwd = '', confirmPwd = '', email = '' 
+    } = {}) {
+      const { errors, valid } = validateUpdateInput(oldPwd, username, newPwd, confirmPwd, email);
+      if (!valid) {
+        throw new UserInputError('Errors', { errors });
+      }
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        errors.general = 'User not found';
+        throw new UserInputError('User not found', { errors });
+      }
+      const match = await bcrypt.compare(oldPwd, user.password);
+      if (!match) {
+        errors.general = 'Wrong crendetials';
+        throw new UserInputError('Wrong crendetials', { errors });
+      }
+      if (username) user.username = username;
+      if (newPwd) user.password = await bcrypt.hash(newPwd, 12);
+      if (email) user.email = email;
+      const res = await user.save();
+      const token = generateToken(res);
       return {
         ...res._doc,
         id: res._id,

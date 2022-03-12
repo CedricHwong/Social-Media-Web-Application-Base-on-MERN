@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { Grid, Transition } from 'semantic-ui-react';
 import { PostCard, PostForm } from '../components';
 import { useAuth } from '../context/auth';
-import { FETCH_POSTS_QUERY, POST_CREATED_SUBSCRIPTION } from '../utils/graphql';
+import { FETCH_POSTS_QUERY, POST_UPDATED_SUBSCRIPTION } from '../utils/graphql';
 
 function Home() {
   const { user } = useAuth();
@@ -12,14 +12,22 @@ function Home() {
 
   useEffect(() => {
     subscribeToMore({
-      document: POST_CREATED_SUBSCRIPTION,
+      document: POST_UPDATED_SUBSCRIPTION,
       updateQuery(prev, { subscriptionData }) {
-        if (!subscriptionData.data?.newPost) return prev;
-        const { newPost } = subscriptionData.data;
-        return {
-          ...prev,
-          getPosts: [newPost, ...prev.getPosts],
-        };
+        if (!subscriptionData.data) return prev;
+        const { updatedPost } = subscriptionData.data;
+        const prevHasPost = prev.getPosts.some(p => p.id === updatedPost.postId);
+        switch (updatedPost.eventType) {
+        case 'NEW':
+          if (prevHasPost) return prev;
+          return { ...prev, getPosts: [updatedPost.post, ...prev.getPosts] };
+        case 'DELETE':
+          if (!prevHasPost) return prev;
+          return { ...prev, getPosts: prev.getPosts.filter(p => p.id !== updatedPost.postId) };
+        case 'LIKE': case 'COMMENT':
+        default:
+          return prev;
+        }
       },
     });
   }, []);

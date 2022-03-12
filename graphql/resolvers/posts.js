@@ -47,9 +47,10 @@ module.exports = {
 
       const post = await newPost.save();
 
-      context.pubsub.publish('NEW_POST', {
-        newPost: post
-      });
+      context.pubsub.publish('NEW_POST', { updatedPost: {
+        eventType: 'NEW',
+        postId: post.id, post,
+      } });
 
       return post;
     },
@@ -60,6 +61,7 @@ module.exports = {
         const post = await Post.findById(postId);
         if (user.username === post.username) {
           await post.delete();
+          context.pubsub.publish('DEL_POST', { updatedPost: { eventType: 'DELETE', postId } });
           return 'Post deleted successfully';
         }
         else {
@@ -87,14 +89,17 @@ module.exports = {
           });
         }
         await post.save();
+        context.pubsub.publish('LIKE_POST', { updatedPost: { eventType: 'LIKE', postId, post } });
         return post;
       }
       else throw new UserInputError('Post not found');
     },
   },
   Subscription: {
-    newPost: {
-      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator('NEW_POST'),
+    updatedPost: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator([
+        'NEW_POST', 'DEL_POST', 'LIKE_POST', 'COMMENT_POST'
+      ]),
     },
   },
 };

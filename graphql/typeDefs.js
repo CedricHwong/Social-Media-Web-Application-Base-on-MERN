@@ -30,6 +30,11 @@ module.exports = gql`
     username: String!
     createdAt: String!
   }
+  type PostSubEvent {
+    eventType: String!
+    postId: ID!
+    post: Post
+  }
   input RegisterInput {
     username: String!
     password: String!
@@ -50,6 +55,6 @@ module.exports = gql`
     likePost(postId: ID!): Post!
   }
   type Subscription {
-    newPost: Post!
+    updatedPost: PostSubEvent!
   }
 `;

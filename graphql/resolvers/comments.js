@@ -24,6 +24,10 @@ module.exports = {
           createdAt: new Date().toISOString()
         });
         await post.save();
+        context.pubsub.publish('COMMENT_POST', { updatedPost: {
+          eventType: 'COMMENT',
+          postId, post
+        } });
         return post;
       }
       else throw new UserInputError('Post not found');

@@ -34,5 +34,7 @@ npm start
 
 ## TODO
 
-* [ ] Implement authentication on the server side. Only verified users can reply/delete.
+* [x] Implement authentication on the server side. Only verified users can reply/delete.
+  * [ ] A friendly prompt on the front-end when the authentication fails.
+* [x] Real-time updates of posts.
 * [ ] Real-time updates of comments.

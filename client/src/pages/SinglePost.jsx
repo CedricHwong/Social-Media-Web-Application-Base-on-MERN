@@ -5,8 +5,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import moment from 'moment';
 import { Grid, Image, Card, Button, Icon, Label, Form, Transition, Modal, Header } from 'semantic-ui-react';
 import { useAuth } from '../context/auth';
-import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION, POST_UPDATED_SUBSCRIPTION } from '../utils/graphql';
+import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION, POST_UPDATED_SUBSCRIPTION, FETCH_POSTS_QUERY } from '../utils/graphql';
 import { LikeButton, DeleteButton, MyPopup } from '../components';
+import { apolloCache } from '../Apollo';
 
 function SinglePost() {
 
@@ -28,7 +29,13 @@ function SinglePost() {
         const { updatedPost } = subscriptionData.data;
         switch (updatedPost.eventType) {
         case 'DELETE':
-          if (!deleting) setIsDeleted(true);
+          if (!deleting) {
+            setIsDeleted(true);
+            // update posts list for home
+            apolloCache.updateQuery({ query: FETCH_POSTS_QUERY, }, ({ getPosts }) => ({
+              getPosts: getPosts.filter((p) => p.id !== postId),
+            }));
+          }
         case 'LIKE':
           return prev;
         }

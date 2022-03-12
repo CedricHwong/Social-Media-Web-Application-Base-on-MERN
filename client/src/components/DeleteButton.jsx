@@ -15,17 +15,9 @@ function DeleteButton({ postId, commentId, beforeDelete, afterDelete }) {
     update(cache) {
       setConfirmOpen(false);
       if (!commentId) {
-        const existingPosts = cache.readQuery({
-          query: FETCH_POSTS_QUERY,
-        });
-        if (existingPosts) {
-          cache.writeQuery({
-            query: FETCH_POSTS_QUERY,
-            data: {
-              getPosts: existingPosts.getPosts.filter((p) => p.id !== postId),
-            }
-          });
-        }
+        cache.updateQuery({ query: FETCH_POSTS_QUERY, }, ({ getPosts }) => ({
+          getPosts: getPosts.filter((p) => p.id !== postId),
+        }));
       }
       afterDelete?.();
     },

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Transition } from 'semantic-ui-react';
 import { PostCard, PostForm } from '../components';
 import { useAuth } from '../context/auth';
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
@@ -22,11 +22,13 @@ function Home() {
         )
       }{ loading
         ? <h1>Loading posts...</h1>
-        : data?.getPosts?.map((post) => (
-          <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-            <PostCard post={post} />
-          </Grid.Column>
-        )) ?? error?.message ?? 'Error'
+        : <Transition.Group>{
+            data?.getPosts?.map((post) => (
+              <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
+                <PostCard post={post} />
+              </Grid.Column>
+            )) ?? error?.message ?? 'Error'
+          }</Transition.Group>
       }</Grid.Row>
     </Grid>
   );

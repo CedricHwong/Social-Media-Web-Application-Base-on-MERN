@@ -14,12 +14,16 @@ const IfNotLogin = () => useAuth().user
   ? <Navigate replace to="/" />
   : <Outlet />;
 
+const Layout = () => <Container>
+  <MenuBar />
+  <Outlet />
+</Container>;
+
 function App() {
   return (
     <Router>
-      <Container>
-        <MenuBar />
-        <Routes>
+      <Routes>
+        <Route element={<Layout />}>
           <Route exact path="/" element={<Navigate replace to="/home" />} />
           <Route exact path="/home" element={<Home />} />
           <Route element={<IfNotLogin />}>
@@ -28,8 +32,8 @@ function App() {
           </Route>
           <Route exact path="/posts/:postId" element={<SinglePost />} />
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Container>
+        </Route>
+      </Routes>
     </Router>
   );
 }

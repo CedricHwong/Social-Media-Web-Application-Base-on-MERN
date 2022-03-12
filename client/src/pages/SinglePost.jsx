@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import moment from 'moment';
-import { Grid, Image, Card, Button, Icon, Label, Form } from 'semantic-ui-react';
+import { Grid, Image, Card, Button, Icon, Label, Form, Transition } from 'semantic-ui-react';
 import { useAuth } from '../context/auth';
 import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION } from '../utils/graphql';
 import { LikeButton, DeleteButton, MyPopup } from '../components';
@@ -94,16 +94,18 @@ function SinglePost() {
               </Card.Content>
             </Card>
           )}
-          {comments.map((comment) => (
-            <Card fluid key={comment.id}>
-              <Card.Content>
-                {user?.username === comment.username && (
-                  <DeleteButton postId={id} commentId={comment.id} />
-                )}
-                <CardBody info={comment} />
-              </Card.Content>
-            </Card>
-          ))}
+          <Transition.Group>
+            {comments.map((comment) => (
+              <Card fluid key={comment.id}>
+                <Card.Content>
+                  {user?.username === comment.username && (
+                    <DeleteButton postId={id} commentId={comment.id} />
+                  )}
+                  <CardBody info={comment} />
+                </Card.Content>
+              </Card>
+            ))}
+          </Transition.Group>
         </Grid.Column>
       </Grid.Row>
     </Grid>

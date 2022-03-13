@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import moment from 'moment';
 import { Grid, Image, Card, Button, Icon, Label, Form, Transition, Modal, Header } from 'semantic-ui-react';
@@ -78,7 +78,7 @@ function SinglePost() {
   } = post;
 
   const CardBody = ({ info: { author, createdAt, body } }) => <>
-    <Card.Header>{author.username}</Card.Header>
+    <Card.Header as={Link} to={`/users/${author.id}`}>{author.username}</Card.Header>
     <Card.Meta>
       {createdAt? moment(createdAt).fromNow(): 'a long long time ago'}
     </Card.Meta>
@@ -103,10 +103,12 @@ function SinglePost() {
       </Modal>
       <Grid>
         <Grid.Row>
+          <Grid.Column width={1} />
           <Grid.Column width={2}>
-            <Image floated="right" size="small" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg" />
+            <Image as={Link} to={`/users/${author.id}`}
+              floated="right" size="small" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg" />
           </Grid.Column>
-          <Grid.Column width={10}>
+          <Grid.Column width={12}>
             <Card fluid><Card.Content><CardBody info={post} /></Card.Content></Card>
             <hr />
             <Card.Content extra>
@@ -164,6 +166,7 @@ function SinglePost() {
               ))}
             </Transition.Group>
           </Grid.Column>
+          <Grid.Column width={1} />
         </Grid.Row>
       </Grid>
     </>

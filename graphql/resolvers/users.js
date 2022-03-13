@@ -6,6 +6,7 @@ const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 
 const { UserInputError } = require('apollo-server');
+const checkAuth = require('../../util/check-auth');
 
 function generateToken(user) {
   return jwt.sign(
@@ -118,10 +119,10 @@ module.exports = {
       };
     },
     async updateUserInfo(_, {
-      id, oldPwd,
-      username = '', newPwd = '', confirmPwd = '', email = '' 
-    } = {}) {
-      const { errors, valid } = validateUpdateInput(oldPwd, username, newPwd, confirmPwd, email);
+      id, description, username, oldPwd, newPwd, confirmPwd, email,
+    }, context, info) {
+      console.log([id, oldPwd, username, newPwd, confirmPwd, email, description])
+      const { errors, valid } = validateUpdateInput(username, newPwd, confirmPwd, email);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
@@ -130,14 +131,21 @@ module.exports = {
         errors.general = 'User not found';
         throw new UserInputError('User not found', { errors });
       }
-      const match = await bcrypt.compare(oldPwd, user.password);
-      if (!match) {
-        errors.general = 'Wrong crendetials';
-        throw new UserInputError('Wrong crendetials', { errors });
+      try {
+        const authUser = checkAuth(context);
+        if (user.id !== authUser.id) throw new Error('Wrong crendetials');
+      }
+      catch (err) {
+        const match = await bcrypt.compare(oldPwd, user.password);
+        if (!match) {
+          errors.general = 'Wrong crendetials';
+          throw new UserInputError('Wrong crendetials', { errors });
+        }
       }
       if (username) user.username = username;
       if (newPwd) user.password = await bcrypt.hash(newPwd, 12);
       if (email) user.email = email;
+      if (description !== undefined) user.description = description;
       const res = await user.save();
       const token = generateToken(res);
       return {

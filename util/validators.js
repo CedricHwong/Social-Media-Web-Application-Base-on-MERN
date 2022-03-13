@@ -45,11 +45,9 @@ module.exports.validateLoginInput = (username, password) => {
   };
 };
 
-module.exports.validateUpdateInput = (oldPwd, username, newPwd, confirmPwd, email) => {
+module.exports.validateUpdateInput = (username, newPwd, confirmPwd, email) => {
   const errors = {};
-  if (oldPwd === '')
-    errors.oldPwd = 'Password must not be empty';
-  if (!username || !!username.trim())
+  if (username && !!username.trim())
     errors.username = 'Username must not be empty';
   if (email) {
     email = email.trim();

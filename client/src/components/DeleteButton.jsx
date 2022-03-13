@@ -25,7 +25,7 @@ function DeleteButton({ postId, commentId, beforeDelete, afterDelete }) {
 
   return (
     <>
-      <MyPopup content={commentId? 'Delete comment' : 'Delete post'}>
+      <MyPopup content={commentId? 'Delete Comment' : 'Delete Post'}>
         <Button icon="trash" as="div" color="red" floated="right"
           onClick={() => setConfirmOpen(true)} />
       </MyPopup>

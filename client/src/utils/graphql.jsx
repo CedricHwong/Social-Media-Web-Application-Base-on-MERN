@@ -165,3 +165,14 @@ export const POST_UPDATED_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const FETCH_USER_QUERY = gql`
+  query GetUser($userId: ID, $username: String, $email: String) {
+    getUser(userId: $userId, username: $username, email: $email) {
+      id
+      email
+      username
+      createdAt
+    }
+  }
+`;

@@ -29,6 +29,7 @@ module.exports = gql`
     token: String
     username: String!
     createdAt: String!
+    description: String
   }
   type updatedPostEvent {
     eventType: String!
@@ -45,11 +46,12 @@ module.exports = gql`
   }
   input UpdateUserInfoInput {
     id: ID!
-    oldPwd: String!
+    oldPwd: String
     username: String
     newPwd: String
     confirmPwd: String
     email: String
+    description: String
   }
   type Query {
     getPosts: [Post]!

@@ -18,12 +18,12 @@ function PostCard({
   const commentOnPost = console.log;
 
   return (
-    <Card fluid>
-      <Card.Content>
+    <Card fluid link raised>
+      <Card.Content as={Link} to={`/posts/${id}`}>
         <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
           as={Link} to={`/users/${author.id}`} />
         <Card.Header>{author.username}</Card.Header>
-        <Card.Meta as={Link} to={`/posts/${id}`}>
+        <Card.Meta>
           {createdAt? moment(createdAt).fromNow(): 'a long long time ago'}
         </Card.Meta>
         <Card.Description>{body}</Card.Description>

@@ -4,21 +4,24 @@ const { withFilter } = require('graphql-subscriptions');
 
 const Post = require('../../models/Post');
 const checkAuth = require('../../util/check-auth');
+const autoPopulate = require('../../util/autoPopulate');
 
 module.exports = {
   Query: {
-    async getPosts() {
+    async getPosts(parent, args, context, info) {
       try {
-        const posts = await Post.find().sort({ createdAt: -1 });
+        const posts = await autoPopulate(
+          Post.find(), info
+        ).sort({ createdAt: -1 });
         return posts;
       }
       catch (err) {
         throw new Error(err);
       }
     },
-    async getPost(_, { postId }) {
+    async getPost(_, { postId }, context, info) {
       try {
-        const post = await Post.findById(postId);
+        const post = await autoPopulate(Post.findById(postId), info);
         if (post) {
           return post;
         }
@@ -32,7 +35,7 @@ module.exports = {
     }
   },
   Mutation: {
-    async createPost(_, { body }, context) {
+    async createPost(_, { body }, context, info) {
       const user = checkAuth(context);
 
       if (body.trim() === '') {
@@ -41,12 +44,12 @@ module.exports = {
 
       const newPost = new Post({
         body,
-        user: user.id,
-        username: user.username,
-        createdAt: new Date().toISOString()
+        author: user._id,
+        createdAt: new Date().toISOString(),
       });
 
       const post = await newPost.save();
+      await autoPopulate(post);
 
       context.pubsub.publish('NEW_POST', { updatedPost: {
         eventType: 'NEW',
@@ -60,7 +63,7 @@ module.exports = {
 
       try {
         const post = await Post.findById(postId);
-        if (user.username === post.username) {
+        if (user.id === '' + post.author) {
           await post.delete();
           context.pubsub.publish('DEL_POST', { updatedPost: { eventType: 'DELETE', postId } });
           return 'Post deleted successfully';
@@ -73,23 +76,24 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async likePost(_, { postId }, context) {
-      const { username } = checkAuth(context);
+    async likePost(_, { postId }, context, info) {
+      const user = checkAuth(context);
 
       const post = await Post.findById(postId);
       if (post) {
-        if (post.likes.find((like) => like.username === username)) {
+        if (post.likes.some((like) => like.user + '' === user.id)) {
           // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.username !== username);
+          post.likes = post.likes.filter((like) => like.user + '' !== user.id);
         }
         else {
           // Not liked, like post
           post.likes.push({
-            username,
-            createdAt: new Date().toISOString()
+            user: user._id,
+            createdAt: new Date().toISOString(),
           });
         }
         await post.save();
+        await autoPopulate(post);
         context.pubsub.publish('LIKE_POST', { updatedPost: { eventType: 'LIKE', postId, post } });
         return post;
       }

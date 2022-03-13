@@ -20,8 +20,7 @@ function Register() {
   });
 
   const [addUser, { loading }] = useMutation(REGISTER_USER_MUTATION, {
-    update(proxy, result) {
-      console.log(result);
+    update() {
       navigate('/login', { replace: true });
     },
     onError(err) {

@@ -4,6 +4,8 @@ const { AuthenticationError } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config');
 
+const { Types: { ObjectId } } = require('mongoose');
+
 module.exports = (context) => {
   // context = { ... headers }
   const authHeader = context.req.headers.authorization;
@@ -13,6 +15,7 @@ module.exports = (context) => {
     if (token) {
       try {
         const user = jwt.verify(token, SECRET_KEY);
+        user._id = new ObjectId(user.id);
         return user;
       }
       catch (err) {

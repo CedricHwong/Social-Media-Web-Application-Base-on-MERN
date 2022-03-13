@@ -73,12 +73,12 @@ function SinglePost() {
   if (!data) return (<Navigate replace to="/" />);
 
   const post = data.getPost, {
-    id, body, createdAt, username, comments,
+    id, body, createdAt, author, comments,
     likes, likeCount, commentCount
   } = post;
 
-  const CardBody = ({ info: { username, createdAt, body } }) => <>
-    <Card.Header>{username}</Card.Header>
+  const CardBody = ({ info: { author, createdAt, body } }) => <>
+    <Card.Header>{author.username}</Card.Header>
     <Card.Meta>
       {createdAt? moment(createdAt).fromNow(): 'a long long time ago'}
     </Card.Meta>
@@ -119,7 +119,7 @@ function SinglePost() {
                   <Label basic color="blue" pointing="left">{commentCount}</Label>
                 </Button>
               </MyPopup>
-              {user?.username === username && (
+              {user?.id === author.id && (
                 <DeleteButton postId={id}
                   beforeDelete={() => deleting = true}
                   afterDelete={deletePostCallback}
@@ -155,7 +155,7 @@ function SinglePost() {
               {comments.map((comment) => (
                 <Card fluid key={comment.id}>
                   <Card.Content>
-                    {user?.username === comment.username && (
+                    {user?.id === comment.author.id && (
                       <DeleteButton postId={id} commentId={comment.id} />
                     )}
                     <CardBody info={comment} />

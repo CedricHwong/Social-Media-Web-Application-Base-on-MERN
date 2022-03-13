@@ -10,7 +10,7 @@ import MyPopup from './MyPopup';
 
 function PostCard({
   post: {
-    body, createdAt, id, username, likeCount, commentCount, likes,
+    id, body, author, createdAt, likes, likeCount, commentCount,
   }
 }) {
 
@@ -20,8 +20,9 @@ function PostCard({
   return (
     <Card fluid>
       <Card.Content>
-        <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg" />
-        <Card.Header>{username}</Card.Header>
+        <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
+          as={Link} to={`/users/${author.id}`} />
+        <Card.Header>{author.username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {createdAt? moment(createdAt).fromNow(): 'a long long time ago'}
         </Card.Meta>
@@ -37,7 +38,7 @@ function PostCard({
             <Label basic color="teal" pointing="left">{commentCount}</Label>
           </Button>
         </MyPopup>
-        {user?.username === username && (
+        {user?.id === author.id && (
           <DeleteButton postId={id} />
         )}
       </Card.Content>

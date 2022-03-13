@@ -7,10 +7,10 @@ export const FETCH_POSTS_QUERY = gql`
       id
       body
       createdAt
-      username
+      author { id, username }
       likeCount
       likes {
-        username
+        user { id }
       }
       commentCount
     }
@@ -23,19 +23,11 @@ export const CREATE_POST_MUTATION = gql`
       id
       body
       createdAt
-      username
+      author { id, username }
       likes {
-        id
-        username
-        createdAt
+        user { id }
       }
       likeCount
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
       commentCount
     }
   }
@@ -83,7 +75,7 @@ export const LIKE_POST_MUTATION = gql`
       id
       likes {
         id
-        username
+        user { id }
       }
       likeCount
     }
@@ -96,15 +88,15 @@ export const FETCH_POST_QUERY = gql`
       id
       body
       createdAt
-      username
+      author { id, username }
       likeCount
       likes {
-        username
+        user { id }
       }
       commentCount
       comments {
         id
-        username
+        author { id, username }
         createdAt
         body
       }
@@ -126,7 +118,7 @@ export const CREATE_COMMENT_MUTATION = gql`
         id
         body
         createdAt
-        username
+        author { id, username }
       }
       commentCount
     }
@@ -139,7 +131,7 @@ export const DELETE_COMMENT_MUTATION = gql`
       id
       comments {
         id
-        username
+        author { id, username }
         createdAt
         body
       }
@@ -157,15 +149,15 @@ export const POST_UPDATED_SUBSCRIPTION = gql`
         id
         body
         createdAt
-        username
+        author { id, username }
         likeCount
         likes {
-          username
+          user { id }
         }
         commentCount
         comments {
           id
-          username
+          author { id, username }
           createdAt
           body
         }

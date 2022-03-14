@@ -15,3 +15,29 @@
 .ui.teal.buttons .button:focus {
   background-color: #00b5ad;
 }
+
+.chatBtn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+}
+
+.chatBox {
+  position: fixed !important;
+  bottom: 2px;
+  right: 100px;
+  z-index: 1024;
+  max-height: 90%;
+}
+.chatBox .messageList {
+  padding-bottom: 1rem !important;
+}
+.messageList .signleMsg {
+  padding: 1rem 0.5rem 0 !important;
+}
+.signleMsg > .msgText {
+  padding: 0 0.5rem !important;
+}
+.signleMsg > .msgAvatar {
+  padding: 0 !important;
+}

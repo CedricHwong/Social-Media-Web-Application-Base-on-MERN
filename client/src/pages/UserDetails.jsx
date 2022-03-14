@@ -32,7 +32,7 @@ function UserDetails() {
   }
 
   return (
-    <Segment textAlign="center" vertical>
+    <Segment textAlign="center" basic padded='very'>
       <Card.Group centered>
         <Card>
           <div style={{ position: 'relative' }}>

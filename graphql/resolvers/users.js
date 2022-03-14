@@ -7,6 +7,7 @@ const User = require('../../models/User');
 
 const { UserInputError } = require('apollo-server');
 const checkAuth = require('../../util/check-auth');
+const { withFilter } = require('graphql-subscriptions');
 
 function generateToken(user) {
   return jwt.sign(
@@ -19,6 +20,8 @@ function generateToken(user) {
     { expiresIn: '1h' },
   );
 }
+
+let msgCount = 0;
 
 module.exports = {
   Query: {
@@ -40,6 +43,23 @@ module.exports = {
         username: user.username,
         createdAt: user.createdAt,
       };
+    },
+    async searchUsers(_, { username, email }) {
+      const isEmpty = (s) => s && !!s.trim();
+      if (![username, email].some(isEmpty)) {
+        throw new Error('Invalid input: At least one parameter is required.');
+      }
+      const $or = [];
+      if (username) $or.push({ username: new RegExp(username, 'i'), });
+      if (email) $or.push({ email: new RegExp(email, 'i'), });
+      const users = await User.find({ $or }, {}, { limit: 5 });
+      return users.map(user => ({
+        ...user._doc,
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        createdAt: user.createdAt,
+      }));
     },
   },
   Mutation: {
@@ -121,7 +141,6 @@ module.exports = {
     async updateUserInfo(_, {
       id, description, username, oldPwd, newPwd, confirmPwd, email,
     }, context, info) {
-      console.log([id, oldPwd, username, newPwd, confirmPwd, email, description])
       const { errors, valid } = validateUpdateInput(username, newPwd, confirmPwd, email);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
@@ -153,6 +172,28 @@ module.exports = {
         id: res._id,
         token,
       };
+    },
+    async postMessage(parent, { from, to, text }, { pubsub }) {
+      const id = ++msgCount;
+      const user = await User.findById(from);
+      if (user)
+        pubsub.publish('MSG', { chatMessage: { from, to, text, id, fromUser: {
+          ...user._doc,
+          id: user._id,
+          email: user.email,
+          username: user.username,
+          createdAt: user.createdAt,
+        } } });
+      return id;
+    },
+  },
+  Subscription: {
+    chatMessage: {
+      subscribe: withFilter((parent, args, { pubsub }) => {
+        return pubsub.asyncIterator(['MSG']);
+      }, (payload, variables) => {
+        return payload.chatMessage.to + '' === variables.receiverId + '' || payload.chatMessage.from + '' === variables.receiverId + '';
+      }),
     },
   },
 };

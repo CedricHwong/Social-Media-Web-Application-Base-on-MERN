@@ -53,10 +53,18 @@ module.exports = gql`
     email: String
     description: String
   }
+  type Message {
+    id: Int!
+    from: ID!
+    fromUser: User
+    to: ID!
+    text: String!
+  }
   type Query {
     getPosts: [Post]!
     getPost(postId: ID!): Post
     getUser(userId: ID, username: String, email: String): User
+    searchUsers(username: String, email: String): [User]!
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -67,8 +75,10 @@ module.exports = gql`
     createComment(postId: String!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
     likePost(postId: ID!): Post!
+    postMessage(from: ID!, to: ID!, text: String!): Int!
   }
   type Subscription {
     updatedPost(postId: ID): updatedPostEvent!
+    chatMessage(receiverId: ID!): Message!
   }
 `;

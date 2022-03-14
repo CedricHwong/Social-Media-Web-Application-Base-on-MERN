@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import { Container } from 'semantic-ui-react';
 
 import { Home, Login, Register, SinglePost, UserDetails } from './pages';
-import MenuBar from './components/MenuBar';
+import { ChatBox, MenuBar } from './components';
 import { useAuth } from './context/auth';
 
 const NotFound = () => <h1>Page Not Found</h1>;
@@ -17,6 +17,7 @@ const IfNotLogin = () => useAuth().user
 const Layout = () => <Container>
   <MenuBar />
   <Outlet />
+  <ChatBox />
 </Container>;
 
 function App() {

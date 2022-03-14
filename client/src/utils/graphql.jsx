@@ -173,6 +173,37 @@ export const FETCH_USER_QUERY = gql`
       email
       username
       createdAt
+      description
+    }
+  }
+`;
+
+export const SEARCH_USERS_QUERY = gql`
+  query SearchUsers($username: String, $email: String) {
+    searchUsers(username: $username, email: $email) {
+      id
+      email
+      username
+      createdAt
+      description
+    }
+  }
+`;
+
+export const POST_MESSAGE_MUTATION = gql`
+  mutation PostMessage($from: ID!, $to: ID!, $text: String!) {
+    postMessage(from: $from, to: $to, text: $text)
+  }
+`;
+
+export const CHAT_MESSAGE_SUBSCRIPTION = gql`
+  subscription ChatMessage($receiverId: ID!) {
+    chatMessage(receiverId: $receiverId) {
+      id
+      from
+      fromUser { username }
+      to
+      text
     }
   }
 `;

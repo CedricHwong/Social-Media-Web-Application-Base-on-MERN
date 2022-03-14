@@ -18,7 +18,7 @@ function PostCard({
   const commentOnPost = console.log;
 
   return (
-    <Card fluid link raised>
+    <Card fluid>
       <Card.Content as={Link} to={`/posts/${id}`}>
         <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
           as={Link} to={`/users/${author.id}`} />

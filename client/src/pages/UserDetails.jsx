@@ -3,7 +3,8 @@ import { useQuery } from '@apollo/client';
 import moment from 'moment';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Card, Form, Icon, Image, Segment, TextArea } from 'semantic-ui-react';
+import { Button, Card, Form, Icon, Segment, TextArea } from 'semantic-ui-react';
+import { RandImg } from '../components';
 
 import { useAuth } from '../context/auth';
 import { FETCH_USER_QUERY } from '../utils/graphql';
@@ -36,9 +37,9 @@ function UserDetails() {
       <Card.Group centered>
         <Card>
           <div style={{ position: 'relative' }}>
-            <Image src="https://react.semantic-ui.com/images/avatar/large/matthew.png" wrapped />
+            <RandImg large wrapped />
             {userId === currentUser?.id
-            && <Button basic icon="edit" style={{ position: 'absolute', bottom: '1%', right: 0, }}/>}
+            && <Button basic icon="edit" style={{ position: 'absolute', top: '1%', right: 0, }}/>}
           </div>
           <Card.Content>
             <Card.Header style={{ fontSize: '1.5rem' }}>{user.username}</Card.Header>
@@ -49,7 +50,7 @@ function UserDetails() {
             <Card.Description>
               {userId === currentUser?.id
               ? <Form>
-                  <TextArea rows={4} placeholder="Say hello to the world!" value={user.description}
+                  <TextArea rows={4} placeholder="Say hello to the world!" value={user.description || ''}
                   style={{ with: '100%' }} />
                   <Button.Group widths={2}>
                     <Button basic color="orange">

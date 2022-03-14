@@ -6,3 +6,4 @@ export { default as LikeButton } from './LikeButton';
 export { default as DeleteButton } from './DeleteButton';
 export { default as MyPopup } from './MyPopup';
 export { default as ChatBox } from './ChatBox';
+export { default as RandImg } from './RandImg';

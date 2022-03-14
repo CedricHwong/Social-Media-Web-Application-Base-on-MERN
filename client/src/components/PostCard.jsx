@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Image, Button, Icon, Label } from 'semantic-ui-react';
+import { Card, Button, Icon, Label } from 'semantic-ui-react';
 import moment from 'moment';
 import { useAuth } from '../context/auth';
 import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import MyPopup from './MyPopup';
+import RandImg from './RandImg';
 
 function PostCard({
   post: {
@@ -20,8 +21,7 @@ function PostCard({
   return (
     <Card fluid>
       <Card.Content as={Link} to={`/posts/${id}`}>
-        <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
-          as={Link} to={`/users/${author.id}`} />
+        <RandImg floated="right" size="mini" as={Link} to={`/users/${author.id}`} />
         <Card.Header>{author.username}</Card.Header>
         <Card.Meta>
           {createdAt? moment(createdAt).fromNow(): 'a long long time ago'}

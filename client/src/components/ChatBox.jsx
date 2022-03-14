@@ -6,6 +6,7 @@ import { Button, Card, Form, Portal, Message, Image, Grid, List } from "semantic
 import { useAuth } from "../context/auth";
 import { CHAT_MESSAGE_SUBSCRIPTION, POST_MESSAGE_MUTATION } from "../utils/graphql";
 import SearchUserBar from "./SearchUserBar";
+import useFixRandImg from "../utils/fixRandImg";
 
 function SignleMsg({
   text, right = false, color = right? 'green': 'olive',
@@ -27,9 +28,10 @@ function SignleMsg({
 }
 
 function MessageList({ messages = [] }) {
+  const { randImgUrl } = useFixRandImg();
   return (
     <Grid verticalAlign="middle" className="messageList">
-      {messages.map(({ text, isSelf, imgSrc }, i) => (
+      {messages.map(({ text, isSelf, imgSrc = randImgUrl }, i) => (
         <SignleMsg text={text} right={isSelf} imgSrc={imgSrc} key={i} />
       ))}
     </Grid>
@@ -57,9 +59,10 @@ function ChatBtn({ onClick }) {
 }
 
 function UserList({ list = [], onClick }) {
+  const { randImgUrl } = useFixRandImg();
   return (
     <List selection>
-      {list.map(({ text, username, userId, imgSrc = 'https://react.semantic-ui.com/images/avatar/large/steve.jpg', }) => (
+      {list.map(({ text, username, userId, imgSrc = randImgUrl, }) => (
         <List.Item key={userId} onClick={_ => onClick(userId)}
           header={username} description={text} image={{
             floated: "left", size: "mini", src: imgSrc,
@@ -71,7 +74,7 @@ function UserList({ list = [], onClick }) {
 }
 
 function ChatBox() {
-  const [openWin, setOpenWin] = useState(true);
+  const [openWin, setOpenWin] = useState(false);
   const handleClose = () => setOpenWin(false);
   const handleOpen = () => setOpenWin(true);
   const [isChating, setChating] = useState(false);

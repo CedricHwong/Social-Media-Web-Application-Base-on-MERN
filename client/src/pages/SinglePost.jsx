@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import moment from 'moment';
-import { Grid, Image, Card, Button, Icon, Label, Form, Transition, Modal, Header } from 'semantic-ui-react';
+import { Grid, Card, Button, Icon, Label, Form, Transition, Modal, Header } from 'semantic-ui-react';
 import { useAuth } from '../context/auth';
 import { FETCH_POST_QUERY, CREATE_COMMENT_MUTATION, POST_UPDATED_SUBSCRIPTION, FETCH_POSTS_QUERY } from '../utils/graphql';
-import { LikeButton, DeleteButton, MyPopup } from '../components';
+import { LikeButton, DeleteButton, MyPopup, RandImg } from '../components';
 import { apolloCache } from '../Apollo';
 
 function SinglePost() {
@@ -105,8 +105,7 @@ function SinglePost() {
         <Grid.Row>
           <Grid.Column width={1} />
           <Grid.Column width={2}>
-            <Image as={Link} to={`/users/${author.id}`}
-              floated="right" size="small" src="https://react.semantic-ui.com/images/avatar/large/steve.jpg" />
+            <RandImg as={Link} to={`/users/${author.id}`} floated="right" size="small" />
           </Grid.Column>
           <Grid.Column width={12}>
             <Card fluid><Card.Content><CardBody info={post} /></Card.Content></Card>

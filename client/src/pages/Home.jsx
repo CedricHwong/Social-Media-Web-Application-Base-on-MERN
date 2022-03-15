@@ -5,6 +5,31 @@ import { Grid, Transition } from 'semantic-ui-react';
 import { PostCard, PostForm } from '../components';
 import { useAuth } from '../context/auth';
 import { FETCH_POSTS_QUERY, POST_UPDATED_SUBSCRIPTION } from '../utils/graphql';
+import { createMedia } from '@artsy/fresnel';
+
+const { MediaContextProvider, Media } = createMedia({
+  breakpoints: {
+    mobile: 0,
+    tablet: 768,
+    computer: 1024,
+  },
+});
+
+const DesktopContainer = ({ children }) => <Media at="computer">
+  <Grid columns={3}>{children}</Grid>
+</Media>;
+const TabletContainer = ({ children }) => <Media at="tablet">
+  <Grid columns={2}>{children}</Grid>
+</Media>;
+const MobileContainer = ({ children }) => <Media at="mobile">
+  <Grid columns={1}>{children}</Grid>
+</Media>;
+
+const ResponsiveGrid = ({ children }) => <MediaContextProvider>
+  <DesktopContainer>{children}</DesktopContainer>
+  <TabletContainer>{children}</TabletContainer>
+  <MobileContainer>{children}</MobileContainer>
+</MediaContextProvider>;
 
 function Home() {
   const { user } = useAuth();
@@ -33,7 +58,7 @@ function Home() {
   }, []);
 
   return (
-    <Grid columns={3}>
+    <ResponsiveGrid>
       <Grid.Row className="page-title">
         <h1>Recent Posts</h1>
       </Grid.Row>
@@ -47,13 +72,13 @@ function Home() {
         ? <h1>Loading posts...</h1>
         : <Transition.Group>{
             data?.getPosts?.map((post) => (
-              <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
+              <Grid.Column key={post.id}>
                 <PostCard post={post} />
               </Grid.Column>
             )) ?? error?.message ?? 'Error'
           }</Transition.Group>
       }</Grid.Row>
-    </Grid>
+    </ResponsiveGrid>
   );
 }
 

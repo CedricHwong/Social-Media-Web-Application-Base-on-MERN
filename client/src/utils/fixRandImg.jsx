@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 
+// https://gist.github.com/tuur29/2daf51872917b6143f439c01f922364b
+
 const [largeImgList, smallImgList] = ['large', 'small']
   .map(size => [
     'ade,chris,christian,daniel,elliot,helen,jenny,joe,justen,laura,matt,nan,steve,stevie,veronika',

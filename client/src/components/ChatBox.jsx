@@ -2,6 +2,7 @@
 import { useMutation, useSubscription } from "@apollo/client";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import TextareaAutosize from "react-textarea-autosize";
 import { Button, Card, Form, Portal, Message, Image, Grid, List } from "semantic-ui-react";
 import { useAuth } from "../context/auth";
 import { CHAT_MESSAGE_SUBSCRIPTION, POST_MESSAGE_MUTATION } from "../utils/graphql";
@@ -40,15 +41,23 @@ function MessageList({ messages = [] }) {
 
 function MassageInput({ onSend }) {
   const [text, setText] = useState('');
-  const onChange = (_, { value }) => setText(value);
-  return (<Form onSubmit={_ => onSend(text)}>
-    <Form.Field style={{ paddingBottom: '0.5rem' }}>
-      <Form.Input value={text} placeholder="Aa" name="Aa"
-        onChange={onChange}
-        action={{
-          icon: 'level up alternate',
-          color: 'blue'
-        }} />
+  const onSubmit = _ => onSend(text, _ => setText(''));
+  const onChange = (e) => setText(e.target.value);
+  return (<Form onSubmit={onSubmit} autoComplete="off">
+    <Form.Field>
+      <Form.Input fluid transparent style={{ alignItems: 'flex-end' }}>
+        <TextareaAutosize placeholder="Aa" rows={1} maxRows={5} style={{ resize: 'none' }}
+          onInput={onChange} value={text}
+          onKeyDown={e => {
+            if (e.code !== 'Enter') return;
+            if (!(e.shiftKey || e.ctrlKey)) {
+              e.preventDefault();
+              onSubmit();
+            }
+            else if (e.ctrlKey) setText(text + '\n');
+          }} />
+        <Button type="submit" icon="level up alternate" color="blue" style={{ margin: 0, height: '3rem' }} />
+      </Form.Input>
     </Form.Field>
   </Form>);
 }
@@ -61,7 +70,7 @@ function ChatBtn({ onClick }) {
 function UserList({ list = [], onClick }) {
   const { randImgUrl } = useFixRandImg();
   return (
-    <List selection>
+    <List selection className="userList">
       {list.map(({ text, username, userId, imgSrc = randImgUrl, }) => (
         <List.Item key={userId} onClick={_ => onClick(userId)}
           header={username} description={text} image={{
@@ -109,7 +118,7 @@ function ChatBox() {
     }
   });
 
-  const sendMsg = (msg) => {
+  const sendMsg = (msg, clearInput) => {
     if (msg.trim() === '') {}
     else {
       postMessage({
@@ -118,19 +127,24 @@ function ChatBox() {
           to: chatingUser?.id,
           text: msg,
         },
+        onCompleted({ postMessage: id }) {
+          if (id >= 0) clearInput();
+        },
       });
     }
   };
 
   return <>
-    <ChatBtn onClick={handleOpen} />
+    <ChatBtn onClick={openWin? handleClose: handleOpen} />
     <Portal open={openWin}>
       <Card raised className="chatBox">
         <Card.Content>
-          <Card.Header style={{ height: '100%', textAlign: 'center' }}>
+          <Card.Header style={{ textAlign: 'center' }}>
             {isChating &&
               <Button compact floated="left" circular basic icon="chevron left" onClick={() => setChating(false)} />}
-            {isChating? chatingUser?.username ?? 'ChatBox' : 'ChatBox'}
+            <span style={{ lineHeight: '2rem' }}>
+              {isChating? chatingUser?.username ?? 'ChatBox' : 'ChatBox'}
+            </span>
             <Button compact floated="right" circular basic icon="close" onClick={handleClose} />
           </Card.Header>
         </Card.Content>

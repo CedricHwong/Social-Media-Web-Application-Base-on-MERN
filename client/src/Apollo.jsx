@@ -6,11 +6,11 @@ import { createClient } from "graphql-ws";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000',
+  uri: window.location.origin,
 });
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://localhost:5000',
+    url: (window.location.protocol === 'http:' ? 'ws://' : 'wss://') + window.location.host,
   })
 );
 
@@ -40,7 +40,7 @@ const client = new ApolloClient({
 function Provider({ children }) {
   return (
     <ApolloProvider client={client}>
-        {children}
+      {children}
     </ApolloProvider>
   );
 }

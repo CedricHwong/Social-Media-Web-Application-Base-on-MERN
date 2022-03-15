@@ -138,14 +138,14 @@ module.exports = {
         token,
       };
     },
-    async updateUserInfo(_, {
+    async updateUserInfo(_, { updateUserInfoInput: {
       id, description, username, oldPwd, newPwd, confirmPwd, email,
-    }, context, info) {
+    } }, context, info) {
       const { errors, valid } = validateUpdateInput(username, newPwd, confirmPwd, email);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
-      const user = await User.findOne({ _id: id });
+      const user = await User.findById(id);
       if (!user) {
         errors.general = 'User not found';
         throw new UserInputError('User not found', { errors });
@@ -184,7 +184,7 @@ module.exports = {
           username: user.username,
           createdAt: user.createdAt,
         } } });
-      return id;
+      return user? id: -1;
     },
   },
   Subscription: {

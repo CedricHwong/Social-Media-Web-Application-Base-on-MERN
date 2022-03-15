@@ -6,6 +6,10 @@
   margin-top: 10px;
 }
 
+.column.fade.visible.transition {
+  margin-bottom: 20px !important;
+}
+
 .form-container {
   width: 400px;
   margin: auto;
@@ -28,6 +32,13 @@
   right: 100px;
   z-index: 1024;
   max-height: 90%;
+  margin: 0 !important;
+}
+.chatBox .userList > .item > .content {
+  word-break: break-word;
+}
+.chatBox .userList > .item > .image {
+  padding: 0 !important;
 }
 .chatBox .messageList {
   padding-bottom: 1rem !important;
@@ -37,6 +48,10 @@
 }
 .signleMsg > .msgText {
   padding: 0 0.5rem !important;
+}
+.msgText > .message {
+  max-width: 100%;
+  word-break: break-word;
 }
 .signleMsg > .msgAvatar {
   padding: 0 !important;

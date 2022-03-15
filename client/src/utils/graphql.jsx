@@ -207,3 +207,16 @@ export const CHAT_MESSAGE_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const UPDATE_USER_INFO_MUTATION = gql`
+  mutation UpdateUserInfo($updateUserInfoInput: UpdateUserInfoInput!) {
+    updateUserInfo(updateUserInfoInput: $updateUserInfoInput) {
+      id
+      email
+      username
+      createdAt
+      description
+      token
+    }
+  }
+`;

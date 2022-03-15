@@ -15,9 +15,10 @@ const { MONGODB_URI } = require('./config');
 
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
+const path = require('path');
 
 const pubsub = new PubSub();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Create the schema, which will be used separately by ApolloServer and
 // the WebSocket server.
@@ -56,19 +57,27 @@ const apolloServer = new ApolloServer({
   ],
 });
 
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+
 (async () => {
+  try {
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+    console.log('MongoDB Connected');
 
-  console.log('Connecting to MongoDB...');
-  await mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
-  console.log('MongoDB Connected');
+    console.log('Starting GraphQL server (based on Apollo)...');
+    await apolloServer.start();
+    apolloServer.applyMiddleware({ app, path: '/', cors: true, });
 
-  console.log('Starting GraphQL server (based on Apollo)...');
-  await apolloServer.start();
-  apolloServer.applyMiddleware({ app, path: '/', cors: true, });
-
-  // the server starts listening on the HTTP and WebSocket transports simultaneously.
-  await new Promise(res => httpServer.listen(PORT, res));
-  console.log(`🚀 Query endpoint ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
-  console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}${apolloServer.graphqlPath}`);
-
+    // the server starts listening on the HTTP and WebSocket transports simultaneously.
+    await new Promise(res => httpServer.listen(PORT, res));
+    console.log(`🚀 Query endpoint ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
+    console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}${apolloServer.graphqlPath}`);
+  }
+  catch (err) {
+    console.error(err);
+  }
 })();
